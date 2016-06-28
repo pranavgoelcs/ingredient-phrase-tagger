@@ -1,7 +1,10 @@
 #!/bin/sh
 COUNT_TRAIN=20000
 COUNT_TEST=2000
+no_of_test_file_lines = $(cat nyt-ingredients-snapshot-2015.csv | wc -l)
 
+if [$no_of_test_file_lines -ge $COUNT_TRAIN]
+then
 echo "generating training data..."
 bin/generate_data --data-path=nyt-ingredients-snapshot-2015.csv --count=$COUNT_TRAIN --offset=0 > tmp/train_file || exit 1
 
@@ -21,3 +24,4 @@ echo "evaluating..."
 FN=log/`date +%s`.txt
 python bin/evaluate.py tmp/test_output > $FN || exit 1
 cat $FN
+fi
